@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+
+
 public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
@@ -31,16 +33,27 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_create_admin) {
-            Intent intent = new Intent(this, CreateAdminActivity.class);
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_create_admin) {
+            Intent userDetailsIntent = new Intent(this, UserDetailsActivity.class);
+            startActivity(userDetailsIntent);
+            return true;
+        } else if (itemId == R.id.action_home) {
+            Intent homeIntent = new Intent(this, MainActivity.class);
+            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(homeIntent);
+            finish(); // Ensure the current activity is finished if it's not the MainActivity
+            return true;
+        } else if (itemId == R.id.action_user_details) {
+            // Handle the action for user details
+            Intent intent = new Intent(this, UserDetailsActivity.class);
             startActivity(intent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
+
+
 
 
     @Override

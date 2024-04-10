@@ -2,4 +2,10 @@
     <item
         android:id="@+id/action_create_admin"
         android:title="Create Admin Account"/>
+    <item
+        android:id="@+id/action_user_details"
+        android:title="User Details"/>
+    <item
+        android:id="@+id/action_home"
+        android:title="Home"/>
 </menu>
