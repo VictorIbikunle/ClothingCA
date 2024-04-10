@@ -1,0 +1,25 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/adminName"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:hint="Name" />
+
+    <EditText
+        android:id="@+id/adminId"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:hint="ID (1 letter and 4 numbers)" />
+
+    <Button
+        android:id="@+id/submitAdmin"
+        android:layout_width="117dp"
+        android:layout_height="66dp"
+        android:text="Create Admin" />
+</LinearLayout>
