@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -35,23 +36,27 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.action_create_admin) {
-            Intent userDetailsIntent = new Intent(this, UserDetailsActivity.class);
-            startActivity(userDetailsIntent);
+            startActivity(new Intent(this, CreateAdminActivity.class));
             return true;
         } else if (itemId == R.id.action_home) {
-            Intent homeIntent = new Intent(this, MainActivity.class);
-            homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(homeIntent);
-            finish(); // Ensure the current activity is finished if it's not the MainActivity
+            // No need to restart MainActivity if already there
             return true;
         } else if (itemId == R.id.action_user_details) {
-            // Handle the action for user details
-            Intent intent = new Intent(this, UserDetailsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, UserDetailsActivity.class));
+            return true;
+        } else if (itemId == R.id.action_clothing_list) {
+            // Navigate to ClothingListActivity
+            startActivity(new Intent(this, ClothingListActivity.class));
+            return true;
+        } else if (itemId == R.id.action_clothing_item) {
+            // Navigate to ClothingItemActivity (assuming this exists)
+            startActivity(new Intent(this, ClothingItemActivity.class)); // Make sure this matches your actual class name
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 
 
 
@@ -83,5 +88,22 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.navigation_basket) {
+                startActivity(new Intent(MainActivity.this, BasketActivity.class));
+                return true;
+            } else if (id == R.id.navigation_checkout) {
+                startActivity(new Intent(MainActivity.this, Checkout.class));
+                return true;
+            }
+
+            return false;
+        });
+
+
     }
 }

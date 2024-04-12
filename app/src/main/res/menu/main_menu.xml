@@ -8,4 +8,11 @@
     <item
         android:id="@+id/action_home"
         android:title="Home"/>
+    <!-- New menu items -->
+    <item
+        android:id="@+id/action_clothing_list"
+        android:title="Clothing List"/>
+    <item
+        android:id="@+id/action_clothing_item"
+        android:title="Clothing Item"/>
 </menu>
