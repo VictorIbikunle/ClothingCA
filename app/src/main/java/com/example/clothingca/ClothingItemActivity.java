@@ -1,9 +1,16 @@
 package com.example.clothingca;
 
 import android.os.Bundle;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,19 +27,32 @@ public class ClothingItemActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewClothingItems);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        initializeData();
-
-        // Ensure to pass the correct boolean flag for the context (e.g., false for adding items)
-        adapter = new ClothingItemAdapter(this, clothingItems, false); // Assuming this is for adding items to the basket
+        clothingItems = new ArrayList<>();
+        adapter = new ClothingItemAdapter(this, clothingItems, false); // Assuming this is for viewing items
         recyclerView.setAdapter(adapter);
+
+        loadClothingItems();
     }
 
-    private void initializeData() {
-        clothingItems = new ArrayList<>();
-        // Sample data
-        clothingItems.add(new ClothingItem("1", "T-Shirt", 19.99, 10));
-        clothingItems.add(new ClothingItem("2", "Jeans", 39.99, 20));
-        clothingItems.add(new ClothingItem("3", "Hoodie", 59.99, 15));
+    private void loadClothingItems() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("stock");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                clothingItems.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    ClothingItem item = snapshot.getValue(ClothingItem.class);
+                    if (item != null) {
+                        clothingItems.add(item);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(ClothingItemActivity.this, "Failed to load items.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -15,15 +15,18 @@
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".ViewStockActivity"
+            android:exported="false" />
+        <activity
             android:name=".ClothingItemActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AdminStockActivity"
             android:exported="false" />
         <activity
             android:name=".ClothingItem"
             android:exported="false" />
-        <activity
-            android:name=".navbar"
-            android:exported="false"
-            android:label="@string/title_activity_navbar" />
+
         <activity
             android:name=".ClothingListActivity"
             android:exported="false" />

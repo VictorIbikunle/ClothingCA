@@ -1,33 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:layout_height="match_parent"
+    tools:context=".Checkout">
 
-    <TextView
-        android:id="@+id/itemName"
+    <!-- RecyclerView to list items in the basket -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/checkoutRecyclerView"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/itemPrice"
+        android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        android:textSize="16sp"/>
+        app:layout_constraintBottom_toTopOf="@id/userDetails"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- User details display or input fields -->
     <TextView
-        android:id="@+id/itemPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/itemName"
-        app:layout_constraintEnd_toStartOf="@id/removeButton"
-        android:textSize="16sp"/>
-
-    <Button
-        android:id="@+id/removeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/itemPrice"
+        android:id="@+id/userDetails"
+        android:layout_width="411dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="8dp"
+        android:text="User Details"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Remove"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkoutRecyclerView" />
+
+    <EditText
+        android:id="@+id/nameField"
+        android:layout_width="413dp"
+        android:layout_height="63dp"
+        android:hint="Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userDetails" />
+
+    <EditText
+        android:id="@+id/phoneField"
+        android:layout_width="408dp"
+        android:layout_height="54dp"
+        android:hint="Phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameField" />
+
+    <EditText
+        android:id="@+id/addressField"
+        android:layout_width="408dp"
+        android:layout_height="52dp"
+        android:hint="Address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/phoneField" />
+
+    <EditText
+        android:id="@+id/cardField"
+        android:layout_width="411dp"
+        android:layout_height="60dp"
+        android:hint="Card Number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addressField" />
+
+    <!-- Radio buttons for delivery options -->
+    <RadioGroup
+        android:id="@+id/radioGroupDeliveryOptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/cardField"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <RadioButton
+            android:id="@+id/radioButtonDelivery"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:text="Delivery ($3.00 extra)" />
+
+        <RadioButton
+            android:id="@+id/radioButtonCollect"
+            android:layout_width="161dp"
+            android:layout_height="match_parent"
+            android:text="Click and Collect" />
+    </RadioGroup>
+
+    <!-- TextView to display the total amount -->
+    <TextView
+        android:id="@+id/totalAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total: $0.00"
+        android:textSize="18sp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/radioGroupDeliveryOptions"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <!-- Button to submit the order -->
+    <Button
+        android:id="@+id/submitOrderButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit Order"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/totalAmount"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

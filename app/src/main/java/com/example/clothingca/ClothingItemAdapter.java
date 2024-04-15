@@ -19,39 +19,35 @@ import java.util.List;
 public class ClothingItemAdapter extends RecyclerView.Adapter<ClothingItemAdapter.ViewHolder> {
     private Context context;
     private List<ClothingItem> clothingItems;
-    private boolean isCheckout; // Flag to determine the context of usage
+    private boolean isBasket;
 
-    public ClothingItemAdapter(Context context, List<ClothingItem> clothingItems, boolean isCheckout) {
+    public ClothingItemAdapter(Context context, List<ClothingItem> clothingItems, boolean isBasket) {
         this.context = context;
         this.clothingItems = clothingItems;
-        this.isCheckout = isCheckout;
+        this.isBasket = isBasket;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        int layoutId = isCheckout ? R.layout.activity_checkout : R.layout.activity_clothing_item;
-        View view = LayoutInflater.from(context).inflate(layoutId, parent, false);
-        return new ViewHolder(view, isCheckout);
+        View view = LayoutInflater.from(context).inflate(R.layout.clothing_item_card, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ClothingItem item = clothingItems.get(position);
         holder.itemName.setText(item.getName());
+        holder.itemManufacturer.setText(item.getManufacturer());
         holder.itemPrice.setText(String.format("$%.2f", item.getPrice()));
+        holder.itemCategory.setText(item.getCategory());
 
-        if (!isCheckout) {
-            holder.actionButton.setText("Add to Basket");
-            holder.actionButton.setOnClickListener(v -> {
-                addToBasket(item);
-                Toast.makeText(context, "Added to basket: " + item.getName(), Toast.LENGTH_SHORT).show();
-            });
-        } else {
+        if (isBasket) {
             holder.actionButton.setText("Remove");
-            holder.actionButton.setOnClickListener(v -> {
-                removeItemFromBasket(item, position);
-            });
+            holder.actionButton.setOnClickListener(v -> removeItemFromBasket(item, position));
+        } else {
+            holder.actionButton.setText("Add to Basket");
+            holder.actionButton.setOnClickListener(v -> addToBasket(item));
         }
     }
 
@@ -60,29 +56,42 @@ public class ClothingItemAdapter extends RecyclerView.Adapter<ClothingItemAdapte
         return clothingItems.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView itemName, itemPrice;
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView itemName, itemManufacturer, itemPrice, itemCategory;
         Button actionButton;
 
-        public ViewHolder(View itemView, boolean isCheckout) {
+        ViewHolder(View itemView) {
             super(itemView);
             itemName = itemView.findViewById(R.id.itemName);
+            itemManufacturer = itemView.findViewById(R.id.itemManufacturer);
             itemPrice = itemView.findViewById(R.id.itemPrice);
-            actionButton = itemView.findViewById(isCheckout ? R.id.removeButton : R.id.addToBasketButton);
+            itemCategory = itemView.findViewById(R.id.itemCategory);
+            actionButton = itemView.findViewById(R.id.addToBasketButton);
         }
     }
 
     private void addToBasket(ClothingItem item) {
         DatabaseReference basketRef = FirebaseDatabase.getInstance().getReference("basket");
         String key = basketRef.push().getKey();
-        basketRef.child(key).setValue(item);
+        if (key != null) {
+            basketRef.child(key).setValue(item)
+                    .addOnSuccessListener(aVoid -> Toast.makeText(context, "Added to basket: " + item.getName(), Toast.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Toast.makeText(context, "Error adding to basket", Toast.LENGTH_SHORT).show());
+        }
     }
 
     private void removeItemFromBasket(ClothingItem item, int position) {
-        DatabaseReference basketRef = FirebaseDatabase.getInstance().getReference("basket");
-        basketRef.child(item.getId()).removeValue(); // Assuming item ID is the Firebase key
-        clothingItems.remove(position);
-        notifyItemRemoved(position);
-        Toast.makeText(context, "Removed from basket: " + item.getName(), Toast.LENGTH_SHORT).show();
+        if (item.getFirebaseKey() != null) {
+            DatabaseReference basketRef = FirebaseDatabase.getInstance().getReference("basket");
+            basketRef.child(item.getFirebaseKey()).removeValue()
+                    .addOnSuccessListener(aVoid -> {
+                        clothingItems.remove(position);
+                        notifyItemRemoved(position);
+                        Toast.makeText(context, "Removed from basket: " + item.getName(), Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(context, "Failed to remove item", Toast.LENGTH_SHORT).show());
+        } else {
+            Toast.makeText(context, "Item key is missing", Toast.LENGTH_SHORT).show();
+        }
     }
 }

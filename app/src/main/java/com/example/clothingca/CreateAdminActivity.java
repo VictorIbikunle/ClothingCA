@@ -2,6 +2,7 @@ package com.example.clothingca;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,27 +48,25 @@ public class CreateAdminActivity extends AppCompatActivity {
             String id = adminId.getText().toString().trim();
 
             if (!name.isEmpty() && id.matches("^[a-zA-Z]{1}\\d{4}$")) {
-                // Both name and ID are valid
-                Toast.makeText(CreateAdminActivity.this, "Creating Admin Account...", Toast.LENGTH_SHORT).show();
-
-                // Reference to your Firebase Realtime Database
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("admins");
-
-                // Creating a new Admin object
                 Admin newAdmin = new Admin(name, id);
 
-                // Saving the admin to the database
-                // Use push() for a unique ID or set the ID as the key if you want to avoid duplicates
                 databaseReference.push().setValue(newAdmin)
-                        .addOnSuccessListener(aVoid ->
-                                Toast.makeText(CreateAdminActivity.this, "Admin account created successfully!", Toast.LENGTH_LONG).show())
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(CreateAdminActivity.this, "Admin account created successfully!", Toast.LENGTH_LONG).show();
+                            // Navigate to AdminStockActivity
+                            Intent intent = new Intent(CreateAdminActivity.this, AdminStockActivity.class);
+                            intent.putExtra("adminName", name);
+                            intent.putExtra("adminId", id);
+                            startActivity(intent);
+                        })
                         .addOnFailureListener(e ->
                                 Toast.makeText(CreateAdminActivity.this, "Failed to create admin account.", Toast.LENGTH_LONG).show());
             } else {
-                // Invalid input handling
                 Toast.makeText(CreateAdminActivity.this, "Invalid input. Please check the name and ID format.", Toast.LENGTH_LONG).show();
             }
         });
+
 
 
 
